@@ -3,13 +3,13 @@ plugins {
 }
 
 android {
-    namespace = "com.krscripts.app"
+    namespace = "com.krscripts.apk"
     compileSdk {
-        version = release(37)
+        version = release(28)
     }
 
     defaultConfig {
-        applicationId = "com.krscripts.app"
+        applicationId = "com.krscripts.apk"
         minSdk = 23
         targetSdk = 37
         versionCode = 2
