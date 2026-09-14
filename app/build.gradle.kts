@@ -2,21 +2,44 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+import java.util.Properties
+
+val releaseProps = Properties().apply {
+    val f = rootProject.file("local.properties")
+    if (f.exists()) f.inputStream().use { load(it) }
+}
+val keystorePass = releaseProps.getProperty("RELEASE_STORE_PASSWORD", "android")
+val releaseKeyAlias = releaseProps.getProperty("RELEASE_KEY_ALIAS", "android")
+val keyPass = releaseProps.getProperty("RELEASE_KEY_PASSWORD", "android")
+
+
 android {
-    namespace = "com.krscripts.apk"
+    namespace = "com.krscripts.app"
     compileSdk {
-        version = release(28)
+        version = release(37)
     }
 
     defaultConfig {
-        applicationId = "com.krscripts.apk"
+        applicationId = "com.krscripts.next"
         minSdk = 23
-        targetSdk = 37
-        versionCode = 2
-        versionName = "0.2.0"
+        targetSdk = 28
+        versionCode = 20260915
+        versionName = "26.9.15"
         buildConfigField("String", "FRAMEWORK_VERSION", "\"0.2.0\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+    signingConfigs {
+        create("release") {
+            storeFile = releaseProps.getProperty("RELEASE_STORE_FILE")?.let { file(it) }
+                ?: rootProject.file("keystore/testkey/testkey.p12")
+            storePassword = keystorePass
+            keyAlias = releaseKeyAlias
+            keyPassword = keyPass
+            enableV1Signing = true
+            enableV2Signing = true
+            enableV3Signing = true
+        }
     }
 
     buildTypes {
@@ -27,7 +50,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
@@ -43,4 +66,13 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.material)
     implementation(project(":core"))
+}
+configurations.all {
+    exclude(group = "androidx.profileinstaller", module = "profileinstaller")
+}
+tasks.configureEach {
+    val n = name.lowercase()
+    if (n.contains("artprofile") || n.contains("startupprofile")) {
+        enabled = false
+    }
 }
