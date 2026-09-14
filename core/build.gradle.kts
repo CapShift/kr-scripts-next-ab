@@ -5,7 +5,7 @@ plugins {
 android {
     namespace = "com.krscripts.core"
     compileSdk {
-        version = release(28)
+        version = release(37)
     }
 
     defaultConfig {
