@@ -22,7 +22,7 @@ android {
     defaultConfig {
         applicationId = "com.krscripts.next"
         minSdk = 23
-        targetSdk = 28
+        targetSdk = 33
         versionCode = 20260915
         versionName = "26.9.15"
         buildConfigField("String", "FRAMEWORK_VERSION", "\"0.2.0\"")
